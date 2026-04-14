@@ -1,19 +1,28 @@
-/**
- * BROKEN LOGIC: This helper calculates a "dynamic momentum" bonus
- * which is added to the stored score. This makes the final score 
- * inconsistent with the simple increments done in the controller.
- */
-const calculateMomentumBonus = (tasks) => {
-  if (!tasks) return 0;
-  
-  // Confusing logic: only give bonus if more than 2 tasks exist
-  const count = tasks.filter(t => t.completed).length;
-  if (count < 2) return count * 1.5;
-  
-  // Inconsistent bonus multiplier
-  return count * 3.75;
+const getTaskWeight = (task) => (task.important ? 2 : 1);
+
+const calculateProductivityScore = (tasks = []) => {
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed);
+  const importantTasks = tasks.filter((task) => task.important).length;
+  const completedImportantTasks = completedTasks.filter((task) => task.important).length;
+
+  const totalWeight = tasks.reduce((sum, task) => sum + getTaskWeight(task), 0);
+  const completedWeight = completedTasks.reduce((sum, task) => sum + getTaskWeight(task), 0);
+  const value = totalWeight === 0 ? 0 : Math.round((completedWeight / totalWeight) * 100);
+
+  return {
+    value,
+    breakdown: {
+      totalTasks,
+      completedTasks: completedTasks.length,
+      importantTasks,
+      completedImportantTasks,
+      totalWeight,
+      completedWeight
+    }
+  };
 };
 
 module.exports = {
-  calculateMomentumBonus
+  calculateProductivityScore
 };

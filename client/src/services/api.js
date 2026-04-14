@@ -1,15 +1,15 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const fetchTasks = async () => {
   const response = await fetch(`${API_URL}/tasks`);
   return response.json();
 };
 
-export const createTask = async (title) => {
+export const createTask = async (title, important = false) => {
   const response = await fetch(`${API_URL}/tasks`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title })
+    body: JSON.stringify({ title, important })
   });
   return response.json();
 };

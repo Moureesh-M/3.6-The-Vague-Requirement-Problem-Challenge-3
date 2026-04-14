@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { createTask } from '../services/api';
-import { Plus } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 
 const TaskForm = ({ onTaskCreated }) => {
   const [title, setTitle] = useState('');
+  const [important, setImportant] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
     try {
-      await createTask(title);
+      await createTask(title, important);
       setTitle('');
+      setImportant(false);
       onTaskCreated();
     } catch (err) {
       console.error('Error creating task:', err);
@@ -30,6 +32,15 @@ const TaskForm = ({ onTaskCreated }) => {
             className="styled-input"
           />
         </div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', margin: '0.85rem 0 1rem', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+          <input
+            type="checkbox"
+            checked={important}
+            onChange={(e) => setImportant(e.target.checked)}
+          />
+          <Sparkles size={16} />
+          Mark as important
+        </label>
         <button type="submit" className="primary-button ">
           <Plus size={20} strokeWidth={3} />
           <span>Quick Add</span>
@@ -37,7 +48,7 @@ const TaskForm = ({ onTaskCreated }) => {
       </form>
       <div style={{ marginTop: '2rem', padding: '1rem', borderTop: '1px solid #f1f5f9' }}>
         <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-          Assigning tasks helps our AI calculate your productivity score more accurately.
+          Important tasks count double in your Productivity Score.
         </p>
       </div>
     </div>

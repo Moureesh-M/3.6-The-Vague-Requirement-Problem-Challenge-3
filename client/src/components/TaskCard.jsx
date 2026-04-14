@@ -1,6 +1,6 @@
 import React from 'react';
 import { updateTaskStatus, deleteTaskFromApi } from '../services/api';
-import { Trash2, Check } from 'lucide-react';
+import { Trash2, Check, Sparkles } from 'lucide-react';
 
 const TaskCard = ({ task, onTaskUpdated }) => {
   const handleToggle = async () => {
@@ -31,7 +31,12 @@ const TaskCard = ({ task, onTaskUpdated }) => {
           {task.completed && <Check size={16} strokeWidth={4} />}
         </div>
         <span className="task-text">{task.title}</span>
-        {/* TODO: support important tasks in future version */}
+        {task.important && (
+          <div className="status-badge" style={{ background: 'rgba(245, 158, 11, 0.14)', color: '#92400e', marginLeft: '0.5rem' }}>
+            <Sparkles size={14} />
+            Important
+          </div>
+        )}
       </div>
 
       <button onClick={handleDelete} className="action-btn" title="Delete Task">

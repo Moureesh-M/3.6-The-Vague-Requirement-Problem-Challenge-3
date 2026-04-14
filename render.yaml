@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: tasknest123-api
+    env: node
+    rootDir: server
+    plan: free
+    branch: feature
+    buildCommand: npm install && npx prisma generate && npx prisma db push
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: PORT
+        value: 10000

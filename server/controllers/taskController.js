@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
 
 const getTasks = async (req, res) => {
   try {
@@ -13,27 +12,11 @@ const getTasks = async (req, res) => {
 };
 
 const createTask = async (req, res) => {
-  const { title } = req.body;
+  const { title, important = false } = req.body;
   try {
     const task = await prisma.task.create({
-      data: { title }
+      data: { title, important: Boolean(important) }
     });
-    
-    // TODO: Client mentioned "important tasks" but this was never implemented.
-    // We should probably track if a task is "important" here.
-
-    
-    // BROKEN LOGIC: Inconsistently update score on task creation
-    // This part updates the database record directly
-    const currentScore = await prisma.score.findFirst();
-    if (currentScore) {
-      await prisma.score.update({
-        where: { id: currentScore.id },
-        data: { value: currentScore.value + 5 }
-      });
-    } else {
-      await prisma.score.create({ data: { value: 5 } });
-    }
 
     res.status(201).json(task);
   } catch (error) {
@@ -50,21 +33,6 @@ const updateTask = async (req, res) => {
       data: { completed }
     });
 
-    // NOTE: productivity score should probably consider task importance.
-    // If a task is "important", it should yield more points.
-
-
-    // BROKEN LOGIC: Completing a task increases score again
-    if (completed) {
-      const currentScore = await prisma.score.findFirst();
-      if (currentScore) {
-        await prisma.score.update({
-          where: { id: currentScore.id },
-          data: { value: currentScore.value + 10 }
-        });
-      }
-    }
-
     res.json(task);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update task' });
@@ -77,7 +45,6 @@ const deleteTask = async (req, res) => {
     await prisma.task.delete({
       where: { id: parseInt(id) }
     });
-    // BROKEN LOGIC: Deleting a task does not reduce the score.
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete task' });

@@ -4,7 +4,7 @@ services:
     env: node
     rootDir: server
     plan: free
-    branch: feature
+    branch: main
     buildCommand: npm install && npx prisma generate && npx prisma db push
     startCommand: npm start
     envVars:

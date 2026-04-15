@@ -27,7 +27,7 @@ The score is now reproducible from task data alone, which makes it easier to und
 ## 5. Deployment Links
 The app is configured for deployment using branch `feature` with platform default domains.
 
-- Frontend (Netlify): pending publish, default domain will be `https://<site-name>.netlify.app`
+- Frontend (Netlify): pending publish, default domain will be `https://tasknest123.netlify.app`
 - Backend (Render): pending publish, default domain will be `https://tasknest123-api.onrender.com`
 - Database (Supabase): configured via `DATABASE_URL`
 - Backend env vars: `DATABASE_URL`, `CORS_ORIGIN`

@@ -5,7 +5,7 @@ services:
     rootDir: server
     plan: free
     branch: main
-    buildCommand: npm install && npx prisma generate && npx prisma db push
+    buildCommand: npm install && npx prisma generate
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
